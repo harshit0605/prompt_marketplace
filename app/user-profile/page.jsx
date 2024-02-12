@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
+import { Suspense } from 'react';
 
 import Profile from "@components/Profile"
 
@@ -10,7 +11,6 @@ const UserProfile = () => {
     const [userName, setUserName] = useState('')
 
     const userId = useSearchParams().get('id')
-     
 
     useEffect(() => {
         const fetchUserPosts = async () => {
@@ -35,4 +35,13 @@ const UserProfile = () => {
     )
 }
 
-export default UserProfile;
+// export default UserProfile;
+
+export default function SearchbarComp() {
+    return (
+      // You could have a loading skeleton as the `fallback` too
+      <Suspense>
+        <UserProfile />
+      </Suspense>
+    )
+  }

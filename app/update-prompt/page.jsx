@@ -3,8 +3,12 @@
 import { useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense } from 'react';
+
 
 import Form from "@components/Form"
+
+
 const EditPrompt = () => {
     const router = useRouter();
     const searchParams  = useSearchParams();
@@ -73,4 +77,11 @@ const EditPrompt = () => {
   )
 }
 
-export default EditPrompt
+export default function EditPromptComp() {
+    return (
+      // You could have a loading skeleton as the `fallback` too
+      <Suspense>
+        <EditPrompt />
+      </Suspense>
+    )
+  }
