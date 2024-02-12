@@ -6,7 +6,7 @@ import PromptCard from './PromptCard'
 
 const PromptCardList = ({data, handleTagClick}) => {
     return (
-        <div className='mt-16 prompt-layout'>
+        <div className='mt-16 prompt_layout'>
             {data.map((post) => (
                 <PromptCard 
                     key={post._id}
@@ -21,9 +21,16 @@ const PromptCardList = ({data, handleTagClick}) => {
 const Feed = () => {
   const [searchText, setSearchText] = useState('')
   const [posts, setPosts] = useState([])
+  const [filteredPosts, setFilteredPosts] = useState([])
+//  let filteredPosts = []
 
   const handleSearchChange = (e) => {
-
+    // setSearchText(e.target.value)
+    setSearchText(e.target.value)
+    // const subPosts = posts.filter((post) => post.prompt.contains(searchText))
+    // setFilteredPosts(subPosts)
+    setFilteredPosts(posts.filter((post) => post.prompt.includes(searchText) || post.tag.includes(searchText) || post.creator.username.includes(searchText)  ))
+    // filteredPosts = posts.filter((post) => post.prompt.includes(e.target.value))
   }
 
   useEffect(() => {
@@ -31,8 +38,10 @@ const Feed = () => {
         const response = await fetch('/api/prompt');
         const data = await response.json()
         setPosts(data)
+        
+        setFilteredPosts(data)
     }
-
+    
     fetchPosts()
   },[])
 
@@ -43,6 +52,7 @@ const Feed = () => {
             type='text'
             placeholder='Search for a tag or a username'
             value={searchText}
+            
             onChange={handleSearchChange}
             required
             className='search_input peer '
@@ -50,8 +60,11 @@ const Feed = () => {
         </form>
 
         <PromptCardList
-        data={posts}
-        handleTagClick={() => {}}
+        data={filteredPosts}
+        handleTagClick={(tag) => {
+            setSearchText(tag)
+            setFilteredPosts(posts.filter((post) => post.tag===tag))
+        }}
         />
 
     </section>
